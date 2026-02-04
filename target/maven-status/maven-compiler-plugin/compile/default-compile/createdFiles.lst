@@ -1,10 +1,8 @@
-me\kirug\signgui\MenuTestCommand.class
 me\kirug\signgui\SignGUI$1.class
 me\kirug\signgui\SignPacketManager.class
 me\kirug\signgui\SignGUI.class
 me\kirug\signgui\SignGuiPlugin.class
 me\kirug\signgui\SingleLineHandler.class
-me\kirug\signgui\TestCommand.class
 me\kirug\signgui\SignGUI$SignInputHandler.class
 me\kirug\signgui\SignGUI$Builder.class
 me\kirug\signgui\SignPacketListener.class
