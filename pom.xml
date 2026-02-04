@@ -26,7 +26,19 @@
                     <release>${java.version}</release>
                 </configuration>
             </plugin>
-            <!-- Shade plugin removed as it's no longer needed for ProtocolLib (provided dependency) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>

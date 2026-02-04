@@ -21,21 +21,60 @@ To use it on your server:
 2.  Place the generated `.jar` file in your server's **`plugins/`** folder.
 3.  Ensure **ProtocolLib** is also present in the `plugins/` directory.
 
-### Dependency Configuration
-To use this API in your project, add the compiled JAR as a system dependency or install it to your local Maven repository.
+### Dependency Configuration (JitPack)
+The easiest way to use this API is via [JitPack](https://jitpack.io/#SpirtySprite/SignGUI-API-Folia).
 
-#### Option 1: Using a "libs" folder
-Create a `libs` directory at your project's root, place the `.jar` inside, and add this to your `pom.xml`:
+#### 1. Add the Repository
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
 
+#### 2. Add the Dependency
 ```xml
 <dependency>
-    <groupId>me.kirug</groupId>
-    <artifactId>SignGuiAPI</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <scope>system</scope>
-    <systemPath>${project.basedir}/libs/SignGuiAPI-1.0-SNAPSHOT.jar</systemPath>
+    <groupId>com.github.SpirtySprite</groupId>
+    <artifactId>SignGUI-API-Folia</artifactId>
+    <version>v1.0.0</version>
+    <scope>provided</scope>
 </dependency>
 ```
+
+### Advanced: Shading (No Plugin Install Required)
+If you want to bundle SignGuiAPI directly into your plugin (so users don't have to install the SignGuiAPI.jar separately), use the Maven Shade Plugin:
+
+1.  Change the dependency scope to `compile` instead of `provided`.
+2.  Add the Shade Plugin to your `pom.xml`:
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-shade-plugin</artifactId>
+    <version>3.5.3</version>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>shade</goal>
+            </goals>
+            <configuration>
+                <relocations>
+                    <relocation>
+                        <pattern>me.kirug.signgui</pattern>
+                        <shadedPattern>your.package.signgui</shadedPattern>
+                    </relocation>
+                </relocations>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+> [!IMPORTANT]
+> Always **relocate** the package to avoid conflicts with other plugins using the same API.
 
 ## Usage
 
