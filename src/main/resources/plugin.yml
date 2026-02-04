@@ -1,0 +1,14 @@
+name: SignGuiAPI
+version: '${project.version}'
+main: me.kirug.signgui.SignGuiPlugin
+api-version: '1.21'
+folia-supported: true
+description: A professional Sign GUI API for Folia.
+authors: [KiruGoldzZz]
+commands:
+  signinput:
+    description: Open a test sign GUI
+    usage: /signinput
+  menutest:
+    description: Open a menu integration test
+    usage: /menutest
