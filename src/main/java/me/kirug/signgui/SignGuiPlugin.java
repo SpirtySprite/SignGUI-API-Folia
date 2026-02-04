@@ -19,8 +19,6 @@ public class SignGuiPlugin extends JavaPlugin {
         // Initialize the SignGUI API with this plugin instance
         SignGUI.init(this);
         
-        getCommand("signinput").setExecutor(new TestCommand());
-        getCommand("menutest").setExecutor(new MenuTestCommand(this));
         getLogger().info("SignGuiAPI has been enabled!");
     }
 
