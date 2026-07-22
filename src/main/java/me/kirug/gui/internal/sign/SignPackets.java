@@ -15,10 +15,9 @@ import java.lang.reflect.Method;
 // block ids or the blockstate registry.
 public final class SignPackets {
 
-    private static Class<?> blockPosClass;
+    private static volatile boolean resolved;
+
     private static Class<?> packetClass;
-    private static Class<?> blockChangeClass;
-    private static Class<?> openSignClass;
     private static Class<?> updateSignClass;
 
     private static Constructor<?> blockPosCtor;
@@ -33,19 +32,32 @@ public final class SignPackets {
     private SignPackets() {
     }
 
-    private static void resolve() {
-        if (blockPosClass != null) {
+    // Everything is resolved into locals and only committed at the end, so a partial failure
+    // leaves the state clean and rethrows the real cause next time instead of masking it.
+    private static synchronized void resolve() {
+        if (resolved) {
             return;
         }
-        blockPosClass = Reflect.nms("core", "BlockPos", "BlockPosition");
-        packetClass = Reflect.nms("network", "Packet", "Packet");
-        blockChangeClass = Reflect.nms("network.protocol.game", "ClientboundBlockUpdatePacket", "PacketPlayOutBlockChange");
-        openSignClass = Reflect.nms("network.protocol.game", "ClientboundOpenSignEditorPacket", "PacketPlayOutOpenSignEditor");
-        updateSignClass = Reflect.nms("network.protocol.game", "ServerboundSignUpdatePacket", "PacketPlayInUpdateSign");
+        Class<?> blockPos = Reflect.nms("core", "BlockPos", "BlockPosition");
+        Class<?> blockState = Reflect.nms("world.level.block.state", "BlockState", "IBlockData");
+        Class<?> packet = Reflect.nms("network", "Packet", "Packet");
+        Class<?> blockChange = Reflect.nms("network.protocol.game", "ClientboundBlockUpdatePacket", "PacketPlayOutBlockChange");
+        Class<?> openSign = Reflect.nms("network.protocol.game", "ClientboundOpenSignEditorPacket", "PacketPlayOutOpenSignEditor");
+        Class<?> updateSign = Reflect.nms("network.protocol.game", "ServerboundSignUpdatePacket", "PacketPlayInUpdateSign");
 
-        blockPosCtor = Reflect.constructor(blockPosClass, int.class, int.class, int.class);
-        blockChangeCtor = Reflect.constructorWithArgCount(blockChangeClass, 2);
-        openSignCtor = Reflect.constructorWithArgCount(openSignClass, ServerVersion.current().twoSidedSigns() ? 2 : 1);
+        Constructor<?> posCtor = Reflect.constructor(blockPos, int.class, int.class, int.class);
+        // ClientboundBlockUpdatePacket has two 2-arg ctors; pick (BlockPos, BlockState) by type.
+        Constructor<?> bcCtor = Reflect.constructor(blockChange, blockPos, blockState);
+        Constructor<?> osCtor = ServerVersion.current().twoSidedSigns()
+                ? Reflect.constructor(openSign, blockPos, boolean.class)
+                : Reflect.constructor(openSign, blockPos);
+
+        packetClass = packet;
+        updateSignClass = updateSign;
+        blockPosCtor = posCtor;
+        blockChangeCtor = bcCtor;
+        openSignCtor = osCtor;
+        resolved = true;
     }
 
     public static Object blockPos(int x, int y, int z) {

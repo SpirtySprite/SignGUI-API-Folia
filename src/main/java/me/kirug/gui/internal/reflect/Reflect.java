@@ -89,10 +89,21 @@ public final class Reflect {
     }
 
     public static Method methodTaking(Class<?> owner, Class<?> paramType) {
+        // Prefer an exact one-arg match (send(Packet)) before a looser assignable one,
+        // so we don't grab something like send(Packet, listener) or a method taking Object.
         for (Class<?> c = owner; c != null && c != Object.class; c = c.getSuperclass()) {
             for (Method m : c.getDeclaredMethods()) {
                 Class<?>[] params = m.getParameterTypes();
-                if (params.length == 1 && params[0].isAssignableFrom(paramType)) {
+                if (params.length == 1 && params[0] == paramType) {
+                    m.setAccessible(true);
+                    return m;
+                }
+            }
+        }
+        for (Class<?> c = owner; c != null && c != Object.class; c = c.getSuperclass()) {
+            for (Method m : c.getDeclaredMethods()) {
+                Class<?>[] params = m.getParameterTypes();
+                if (params.length == 1 && params[0].isAssignableFrom(paramType) && params[0] != Object.class) {
                     m.setAccessible(true);
                     return m;
                 }
