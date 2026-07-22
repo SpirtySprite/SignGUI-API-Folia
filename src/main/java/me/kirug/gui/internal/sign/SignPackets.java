@@ -27,7 +27,9 @@ public final class SignPackets {
     private static Method blockDataToState;
     private static Method sendMethod;
 
+    // The update packet stores either a single String[] (most versions) or four String fields.
     private static Field updateSignLinesField;
+    private static java.util.List<Field> updateSignStringFields;
 
     private SignPackets() {
     }
@@ -106,13 +108,42 @@ public final class SignPackets {
 
     public static String[] readLines(Object updateSignPacket) {
         resolve();
-        if (updateSignLinesField == null) {
-            updateSignLinesField = Reflect.fieldOfType(updateSignClass, String[].class);
+        locateLineFields();
+
+        if (updateSignLinesField != null) {
+            Object raw = Reflect.read(updateSignLinesField, updateSignPacket);
+            if (raw instanceof String[]) {
+                return (String[]) raw;
+            }
         }
-        Object raw = Reflect.read(updateSignLinesField, updateSignPacket);
-        if (raw instanceof String[]) {
-            return (String[]) raw;
+        if (updateSignStringFields != null) {
+            String[] out = {"", "", "", ""};
+            for (int i = 0; i < Math.min(4, updateSignStringFields.size()); i++) {
+                Object value = Reflect.read(updateSignStringFields.get(i), updateSignPacket);
+                out[i] = value != null ? value.toString() : "";
+            }
+            return out;
         }
         return new String[]{"", "", "", ""};
+    }
+
+    private static synchronized void locateLineFields() {
+        if (updateSignLinesField != null || updateSignStringFields != null) {
+            return;
+        }
+        Field array = Reflect.fieldOfTypeOrNull(updateSignClass, String[].class);
+        if (array != null) {
+            updateSignLinesField = array;
+            return;
+        }
+        // Fall back to individual String fields, in declared order.
+        java.util.List<Field> strings = new java.util.ArrayList<>();
+        for (Field f : updateSignClass.getDeclaredFields()) {
+            if (f.getType() == String.class) {
+                f.setAccessible(true);
+                strings.add(f);
+            }
+        }
+        updateSignStringFields = strings;
     }
 }

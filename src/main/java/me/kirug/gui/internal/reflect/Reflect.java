@@ -68,6 +68,18 @@ public final class Reflect {
         throw new IllegalStateException("No field of type " + type.getName() + " on " + owner.getName());
     }
 
+    public static Field fieldOfTypeOrNull(Class<?> owner, Class<?> type) {
+        for (Class<?> c = owner; c != null && c != Object.class; c = c.getSuperclass()) {
+            for (Field f : c.getDeclaredFields()) {
+                if (f.getType() == type) {
+                    f.setAccessible(true);
+                    return f;
+                }
+            }
+        }
+        return null;
+    }
+
     public static Field fieldAssignableFrom(Class<?> owner, Class<?> type) {
         for (Class<?> c = owner; c != null && c != Object.class; c = c.getSuperclass()) {
             for (Field f : c.getDeclaredFields()) {

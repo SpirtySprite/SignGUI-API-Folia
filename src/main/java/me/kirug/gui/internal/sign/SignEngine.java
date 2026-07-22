@@ -86,7 +86,11 @@ public final class SignEngine {
         if (player == null || !player.isOnline()) {
             return;
         }
-        Schedulers.forEntity(plugin, player, () -> {
+        // Close any open container first - the client ignores the sign editor while another
+        // screen is open (e.g. when opening a sign from a chest-menu click). A short delay lets
+        // that close settle before we open the sign.
+        Schedulers.forEntity(plugin, player, player::closeInventory);
+        Schedulers.forEntityLater(plugin, player, () -> {
             if (!player.isOnline()) {
                 return;
             }
@@ -109,7 +113,7 @@ public final class SignEngine {
                 plugin.getLogger().warning("SignGUI: failed to open editor for " + player.getName()
                         + " (" + e.getMessage() + ")");
             }
-        });
+        }, 2L);
     }
 
     // Runs on a Netty thread. Returns true when we handled (and should drop) the packet.

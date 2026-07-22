@@ -34,4 +34,20 @@ public final class Schedulers {
             // Plugin disabling mid-flight, or the entity is gone.
         }
     }
+
+    public static void forEntityLater(Plugin plugin, Entity entity, Runnable task, long delayTicks) {
+        if (plugin == null || !plugin.isEnabled()) {
+            return;
+        }
+        long delay = Math.max(1L, delayTicks);
+        try {
+            if (FOLIA) {
+                entity.getScheduler().runDelayed(plugin, scheduled -> task.run(), null, delay);
+            } else {
+                Bukkit.getScheduler().runTaskLater(plugin, task, delay);
+            }
+        } catch (Throwable ignored) {
+            // Plugin disabling mid-flight, or the entity is gone.
+        }
+    }
 }
