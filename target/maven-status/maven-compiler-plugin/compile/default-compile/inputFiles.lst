@@ -1,5 +1,10 @@
-C:\Users\lecre\Desktop\SignGuiAPI\src\main\java\me\kirug\signgui\SignGUI.java
-C:\Users\lecre\Desktop\SignGuiAPI\src\main\java\me\kirug\signgui\SignGuiPlugin.java
-C:\Users\lecre\Desktop\SignGuiAPI\src\main\java\me\kirug\signgui\SignPacketListener.java
-C:\Users\lecre\Desktop\SignGuiAPI\src\main\java\me\kirug\signgui\SignPacketManager.java
-C:\Users\lecre\Desktop\SignGuiAPI\src\main\java\me\kirug\signgui\SingleLineHandler.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\signgui\SignGUI.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\anvilgui\AnvilGUI.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\gui\internal\Schedulers.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\gui\internal\net\NettyChannels.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\gui\internal\version\ServerVersion.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\gui\internal\reflect\Reflect.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\gui\internal\sign\SignEngine.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\gui\internal\sign\SignPackets.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\signgui\SignGuiPlugin.java
+C:\Users\lecre\Desktop\PersonalProject\SignGUI-API-Folia\src\main\java\me\kirug\signgui\SingleLineHandler.java

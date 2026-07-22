@@ -1,6 +1,6 @@
 package me.kirug.signgui;
 
-
+import me.kirug.anvilgui.AnvilGUI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SignGuiPlugin extends JavaPlugin {
@@ -8,23 +8,16 @@ public class SignGuiPlugin extends JavaPlugin {
     private static SignGuiPlugin instance;
 
     @Override
-    public void onLoad() {
-        // ProtocolLib is loaded automatically as a plugin dependency
-    }
-
-    @Override
     public void onEnable() {
         instance = this;
-        
-        // Initialize the SignGUI API with this plugin instance
         SignGUI.init(this);
-        
-        getLogger().info("SignGuiAPI has been enabled!");
+        AnvilGUI.init(this);
+        getLogger().info("SignGuiAPI enabled.");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("SignGuiAPI has been disabled!");
+        SignGUI.shutdown();
     }
 
     public static SignGuiPlugin getInstance() {

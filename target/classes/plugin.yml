@@ -1,7 +1,7 @@
 name: SignGuiAPI
-version: '1.0-SNAPSHOT'
+version: '2.0.0'
 main: me.kirug.signgui.SignGuiPlugin
-api-version: '1.21'
+api-version: '1.16'
 folia-supported: true
-description: A professional Sign GUI API for Folia.
+description: Dependency-free Sign and Anvil text-input GUI API for Paper/Folia 1.16.5-1.21.x.
 authors: [KiruGoldzZz]
