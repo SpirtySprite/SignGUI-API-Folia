@@ -40,7 +40,7 @@ public final class SignPackets {
         }
         Class<?> blockPos = Reflect.nms("core", "BlockPos", "BlockPosition");
         Class<?> blockState = Reflect.nms("world.level.block.state", "BlockState", "IBlockData");
-        Class<?> packet = Reflect.nms("network", "Packet", "Packet");
+        Class<?> packet = Reflect.nms("network.protocol", "Packet", "Packet");
         Class<?> blockChange = Reflect.nms("network.protocol.game", "ClientboundBlockUpdatePacket", "PacketPlayOutBlockChange");
         Class<?> openSign = Reflect.nms("network.protocol.game", "ClientboundOpenSignEditorPacket", "PacketPlayOutOpenSignEditor");
         Class<?> updateSign = Reflect.nms("network.protocol.game", "ServerboundSignUpdatePacket", "PacketPlayInUpdateSign");

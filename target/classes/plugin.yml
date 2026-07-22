@@ -1,5 +1,5 @@
 name: SignGuiAPI
-version: '2.0.0'
+version: '2.0.1'
 main: me.kirug.signgui.SignGuiPlugin
 api-version: '1.16'
 folia-supported: true
