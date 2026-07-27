@@ -10,20 +10,15 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-/**
- * Manages the construction and sending of packets for the Virtual Sign GUI using ProtocolLib.
- */
+
 public class SignPacketManager {
 
-    // 5 blocks below the player ensures chunk loading while keeping it out of sight
     private static final int SIGN_OFFSET = -5;
 
-    /**
-     * Opens a virtual sign editor for the player.
-     * @param player The player to open the editor for.
-     * @param lines Initial lines to display.
-     * @param signType The material type of the sign.
-     */
+
+    private static volatile Boolean openSignPacketTakesFrontTextArg = null;
+
+
     public static void openSignEditor(Player player, List<String> lines, Material signType) {
         if (player == null || !player.isOnline()) {
             return;
@@ -45,9 +40,7 @@ public class SignPacketManager {
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, blockChange);
 
             // 2. Open the Sign Editor
-            PacketContainer openSign = new PacketContainer(PacketType.Play.Server.OPEN_SIGN_EDITOR);
-            openSign.getBlockPositionModifier().write(0, signPosition);
-            openSign.getBooleans().write(0, true); // isFrontText
+            PacketContainer openSign = buildOpenSignPacket(signPosition);
 
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, openSign);
 
@@ -57,11 +50,30 @@ public class SignPacketManager {
         }
     }
 
-    /**
-     * Reverts the virtual sign block to AIR (Cleanup).
-     * @param player The player to send the packet to.
-     * @param position The position of the sign to remove.
-     */
+    private static PacketContainer buildOpenSignPacket(BlockPosition signPosition) throws Exception {
+        Boolean takesFrontText = openSignPacketTakesFrontTextArg;
+
+        if (takesFrontText == null || takesFrontText) {
+            try {
+                PacketContainer packet = ProtocolLibrary.getProtocolManager()
+                        .createPacketConstructor(PacketType.Play.Server.OPEN_SIGN_EDITOR, signPosition, true)
+                        .createPacket(signPosition, true);
+                openSignPacketTakesFrontTextArg = true;
+                return packet;
+            } catch (Exception e) {
+                if (takesFrontText != null) {
+                    throw e; // already confirmed this server supports it; a real failure
+                }
+                // Fall through to try the older single-arg constructor below.
+            }
+        }
+
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_SIGN_EDITOR);
+        packet.getBlockPositionModifier().write(0, signPosition);
+        openSignPacketTakesFrontTextArg = false;
+        return packet;
+    }
+
     public static void cleanUpSign(Player player, BlockPosition position) {
         if (player == null || !player.isOnline()) {
             return;
